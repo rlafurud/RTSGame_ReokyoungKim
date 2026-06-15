@@ -25,6 +25,7 @@ for _stream in (sys.stdout, sys.stderr):
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 import pipeline
@@ -170,6 +171,16 @@ def launch(req: LaunchRequest):
         "map": config["information"]["map_name"],
         "gadgets": [Path(g).stem for g in gadgets],
     }
+
+
+# Serve the built frontend if present, so `start_local` can run the whole app
+# (UI + API + BAR launch) as a single Python process — no Node needed at run
+# time. On the cloud backend dist isn't deployed, so this is skipped and the API
+# runs alone (the frontend is hosted separately on Vercel). Mounted LAST so the
+# API routes above always take precedence.
+_DIST = CURRENT_DIR.parent / "frontend" / "dist"
+if _DIST.is_dir():
+    app.mount("/", StaticFiles(directory=str(_DIST), html=True), name="spa")
 
 
 if __name__ == "__main__":
