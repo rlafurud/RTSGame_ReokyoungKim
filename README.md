@@ -110,19 +110,36 @@ rtsgame/
 
 ---
 
-## 실행 방법 
+## 실행 방법
+
+### 🔗 바로 체험 (설치 없이)
+
+- **배포 데모:** https://rts-game-reokyoung-16359u66u-rlafuruds-projects.vercel.app/
+  → 프롬프트 생성 + 브라우저 시각화까지 바로 사용 가능.
+
+> 배포본은 **생성 + 시각화**까지만 됩니다. 실제 BAR 게임 실행은 아래처럼 게임이 설치된 로컬 PC에서만 가능합니다.
+
+### 🎮 로컬에 게임을 설치했을 때 (실제 BAR 실행까지)
+
+**준비물**
+- [Beyond All Reason](https://www.beyondallreason.info/) 설치 (Windows)
+- 게임 런처 `minigame_generator_v4/` 폴더 (레포 미포함 — 별도로 보유해야 함)
+- Python, 그리고 `backend/.env`에 `OPENAI_API_KEY` 입력
+
+**실행 (원클릭)**
+1. (최초 1회) 프론트 빌드: `cd frontend && npm install && npm run build`
+2. 루트의 **`start_local.bat` 더블클릭** → 브라우저가 `http://localhost:8000` 자동 열림
+3. 프롬프트 생성 → **🎮 BAR에서 실행** → 실제 게임 창이 뜸
+
+> 배포 사이트에서 실행 버튼을 눌러도, 켜져 있는 내 PC의 로컬 백엔드(`localhost:8000`)로 자동 연결돼 게임이 켜집니다. (Chrome 권장)
+
+**개발 모드(핫리로드)로 따로 띄우려면:** `backend`에서 `uvicorn app:app --reload`, `frontend`에서 `npm run dev`.
+
+### 테스트
 
 ```bash
-# 백엔드
-cd rtsgame/backend
-pip install -r requirements.txt
-cp .env.example .env          # OPENAI_API_KEY 입력
-uvicorn app:app --reload      # http://localhost:8000
-
-# 프론트엔드
-cd rtsgame/frontend
-npm install
-npm run dev                   # http://localhost:5173
+cd backend  && pip install -r requirements-dev.txt && python -m pytest   # 백엔드
+cd frontend && npm test                                                  # 프론트 (vitest)
 ```
 
 ---
